@@ -71,3 +71,72 @@ jobs:
           path: |
             storage/logs/junit.xml
             coverage/
+
+  build:
+    if: ${{ hashFiles('composer.json') != '' }}
+    name: Build Release Artifact
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v3
+        with:
+          php-version: '8.3'
+          extensions: intl, mbstring, pdo_mysql, bcmath
+
+      - name: Install Composer dependencies (production)
+        run: composer install --prefer-dist --no-dev --no-progress --no-interaction
+
+      - name: Setup Node (if frontend present)
+        if: ${{ hashFiles('package-lock.json') != '' || hashFiles('yarn.lock') != '' || hashFiles('pnpm-lock.yaml') != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Build frontend assets
+        if: ${{ hashFiles('package.json') != '' }}
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable
+            yarn install --frozen-lockfile
+          elif [ -f pnpm-lock.yaml ]; then
+            corepack enable
+            pnpm install --frozen-lockfile
+          else
+            npm install
+          fi
+          npm run build || yarn build || pnpm build || echo "No build script found. Skipping."
+          rm -rf node_modules
+
+      - name: Optimise Laravel caches
+        run: |
+          if [ -f artisan ]; then
+            php artisan config:cache || true
+            php artisan route:cache || true
+            php artisan view:cache || true
+          else
+            echo "artisan not found. Skipping Laravel optimisation."
+          fi
+
+      - name: Create release archive
+        run: |
+          tar --exclude='./.git' \
+              --exclude='./storage/logs' \
+              --exclude='./tests' \
+              --exclude='./docs' \
+              --exclude='./.github/workflows' \
+              -czf app-release.tar.gz .
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: app-release.tar.gz
+          if-no-files-found: error

@@ -3,6 +3,7 @@
 > Operating guide for WPS Payroll Compliance deployed entirely on free services. Update with every environment change.
 
 ## 1. Architecture Overview
+- Topology diagram: see [docs/topology.md](topology.md).
 - **Render (Web Service)**: Laravel app host. 512 MB RAM, 750 hours/month. Exposes HTTPS endpoint managed by Render. Sleeps after 15 minutes idle.
 - **PlanetScale (MySQL)**: Primary database. Free tier with 5 GB storage, 10M row reads/day. Production branch (`main`) plus deploy requests for schema changes.
 - **Upstash Redis**: Queue and cache. Free tier 10K commands/day, 256 MB. Horizon powered job queues and cache tags share the instance.
@@ -38,13 +39,14 @@
 1. **CI Build** (`ci.yml`)
    - Runs tests and static analysis.
 2. **Release Artifact**
-   - Extend pipeline with build job (composer install --no-dev, asset compilation) and upload artifact.
+   - Build job produces `app-release.tar.gz` (composer --no-dev, cached assets) and publishes as GitHub artifact.
 3. **Deploy Job** (`deploy.yml`)
-   - Trigger via `workflow_dispatch` after green builds.
-   - Steps to implement:
-     - Download artifact.
-     - Use Render deploy hook (`RENDER_DEPLOY_HOOK`) to trigger redeploy.
-     - Monitor Render deploy status via API.
+   - Trigger via `workflow_dispatch` after green builds. Provide CI run ID (`ci_run_id`) and commit SHA.
+   - Steps executed:
+     - Download `app-release` artifact from referenced CI run.
+     - Verify contents for traceability.
+     - POST to Render deploy hook (`RENDER_DEPLOY_HOOK`) to kick service rebuild.
+     - TODO: poll Render API for deployment status (future enhancement).
 4. **Post-Deploy**
    - Run migrations (`php artisan migrate --force`).
    - Warm cache and hit health endpoint.
@@ -62,6 +64,12 @@
 
 GitHub Secrets:
 - `RENDER_HEALTHCHECK_URL`: HTTPS link to `/health` endpoint used by uptime workflow.
+- `RENDER_DEPLOY_HOOK`: Render deploy hook URL triggered by deploy workflow.
+- `PLANETSCALE_DB_URL`: PlanetScale passwordless connection string.
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`: Optional REST credentials for queue management.
+- `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`: Cloudflare R2 storage credentials.
+- `SENTRY_LARAVEL_DSN`: Error reporting.
+- `GRAFANA_API_KEY`: API key for metrics/log shipping (optional).
 
 | Key | Source | Notes |
 | --- | --- | --- |
@@ -92,6 +100,8 @@ GitHub Secrets:
 - Update `docs/accounts.md` if ownership changes.
 
 ## 8. Open Items
-- Automate artifact build and Render deploy hook integration.
+- Implement Render deploy status polling and surfaced alerts.
 - Decide on additional uptime monitoring or alerting beyond GitHub Actions.
 - Evaluate future IaC/script automation (currently deferred).
+
+

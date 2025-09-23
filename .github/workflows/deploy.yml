@@ -10,6 +10,9 @@ on:
         options:
           - staging
           - production
+      ci_run_id:
+        description: "GitHub Actions run ID from CI build"
+        required: true
       version:
         description: "Release tag or commit SHA"
         required: true
@@ -19,14 +22,42 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    timeout-minutes: 20
     concurrency:
       group: deploy-${{ inputs.environment }}
       cancel-in-progress: true
+
     steps:
       - name: Display deployment context
         run: |
           echo "Deploying version: ${{ inputs.version }}"
           echo "Target environment: ${{ inputs.environment }}"
-      - name: Placeholder
+          echo "CI run ID: ${{ inputs.ci_run_id }}"
+
+      - name: Download release artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release
+          path: release
+          run-id: ${{ inputs.ci_run_id }}
+
+      - name: Verify artifact contents
         run: |
-          echo "TODO: add Terraform apply / Laravel deploy steps once infrastructure is ready."
+          ls -al release
+          tar -tzf release/app-release.tar.gz | head
+
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+            echo "RENDER_DEPLOY_HOOK secret not configured." >&2
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST "$RENDER_DEPLOY_HOOK"
+
+      - name: Attach artifact to workflow run (optional download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployed-release
+          path: release/app-release.tar.gz
