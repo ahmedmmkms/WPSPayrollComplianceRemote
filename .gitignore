@@ -1,0 +1,17 @@
+/vendor/
+/node_modules/
+/public/storage
+/storage/*.key
+/storage/app/public
+/.idea/
+/.vscode/
+.env
+.env.*.local
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
+Dockerfile*
+/docker-compose*.yml
+.php-cs-fixer.cache
+coverage/
+reports/
