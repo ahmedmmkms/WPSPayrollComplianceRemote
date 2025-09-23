@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment target"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      version:
+        description: "Release tag or commit SHA"
+        required: true
+        default: "latest"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    concurrency:
+      group: deploy-${{ inputs.environment }}
+      cancel-in-progress: true
+    steps:
+      - name: Display deployment context
+        run: |
+          echo "Deploying version: ${{ inputs.version }}"
+          echo "Target environment: ${{ inputs.environment }}"
+      - name: Placeholder
+        run: |
+          echo "TODO: add Terraform apply / Laravel deploy steps once infrastructure is ready."

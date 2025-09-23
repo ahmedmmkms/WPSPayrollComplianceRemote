@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+jobs:
+  test:
+    if: ${{ hashFiles('composer.json') != '' }}
+    name: Build & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wps_payroll_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v3
+        with:
+          php-version: '8.3'
+          extensions: intl, mbstring, pdo_mysql, bcmath
+          coverage: xdebug
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run test suite
+        run: |
+          if composer show pestphp/pest > /dev/null 2>&1; then
+            vendor/bin/pest --ci
+          elif [ -f vendor/bin/phpunit ]; then
+            vendor/bin/phpunit
+          else
+            echo "No PHP test runner detected. Skipping."
+          fi
+
+      - name: Upload coverage (artifact)
+        if: always() && (hashFiles('storage/logs/junit.xml') != '' || hashFiles('coverage/coverage.xml') != '')
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-test-artifacts
+          path: |
+            storage/logs/junit.xml
+            coverage/
