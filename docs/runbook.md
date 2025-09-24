@@ -7,32 +7,26 @@
 - **Render (Web Service)**: Laravel app host. 512 MB RAM, 750 hours/month. Exposes HTTPS endpoint managed by Render. Sleeps after 15 minutes idle.
 - **PlanetScale (MySQL)**: Primary database. Free tier with 5 GB storage, 10M row reads/day. Production branch (`main`) plus deploy requests for schema changes.
 - **Upstash Redis**: Queue and cache. Free tier 10K commands/day, 256 MB. Horizon powered job queues and cache tags share the instance.
-- **Cloudflare R2**: Object storage for SIF exports, audit PDFs, and other retained artifacts. 10 GB storage, 1M operations/month.
 - **Vercel (Optional)**: Marketing/API documentation site. Hobby plan 100 GB bandwidth.
-- **Observability**: Sentry (errors, 5K events/month) and Grafana Cloud (metrics/logs).
+- **Observability**: Application logs stored via default Laravel channels; rely on manual checks until monitoring stack is added.
 
 ## 2. Provisioning Steps
 1. **Render**
    - Create new Web Service from GitHub repo (`master` branch).
-   - Choose runtime (Dockerfile vs Render native build) once app scaffold exists.
-   - Load environment variables from vaulted `.env.production` (see Section 5).
+   - Configure the service using the Docker runtime (Render builds from the repository `Dockerfile`).
+   - Load environment variables from `.env.production` (see Section 5) once finalized and synced with GitHub secrets.
    - Enable auto-deploy on successful builds from the protected branch.
 2. **PlanetScale**
    - Create database `wps_payroll_prod`.
-   - Keep production branch `main`; issue deploy requests for migrations.
-   - Generate passwordless connection URL; store in vault and GitHub secret `PLANETSCALE_DB_URL`.
+   - Generate passwordless connection URL; add it to the GitHub secret `PLANETSCALE_DB_URL` and document rotation details.
 3. **Upstash Redis**
    - Create database in the closest region to Render.
    - Copy REST and TLS credentials; map to secrets `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `REDIS_URL`.
-4. **Cloudflare R2**
-   - Create bucket `wps-payroll-artifacts`.
-   - Generate API token scoped to R2 read/write.
-   - Store `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` secrets.
-5. **Sentry & Grafana**
-   - Sentry: create Laravel project, capture DSN and auth token.
-   - Grafana Cloud: create stack, enable Prometheus/Loki; note ingestion endpoints and API key.
-6. **Secrets Vault**
-   - Record all credentials (owner, rotation date) in shared vault.
+4. **Observability Placeholder**
+   - Document where logs are written (Render logs, Laravel log files).
+   - Capture manual steps for reviewing recent errors.
+5. **Credential Tracking**
+   - Track credential owners and rotation cadence in docs/accounts.md.
    - Update `docs/accounts.md` owner table.
 
 ## 3. Deployment Workflow
@@ -56,8 +50,7 @@
 - **Render Sleeping/Down**: Hit uptime ping endpoint or visit app to wake. Ensure scheduled workflow is running.
 - **PlanetScale Limits**: Review read metrics, archive batches, or schedule maintenance window; upgrade tier if sustained load.
 - **Redis Commands Exhausted**: Reduce queue concurrency, batch jobs off-peak, or trim cache usage.
-- **R2 Storage Near Limit**: Apply lifecycle policy to purge old exports; archive locally if compliance demands.
-- **Credential Issues**: Retrieve from vault; rotate via backup owner if compromised.
+- **Credential Issues**: Retrieve from the documented secret source; rotate via backup owner if compromised.
 - **Rollback**: Redeploy prior build via Render dashboard or rerun deploy workflow with previous commit SHA.
 
 ## 5. Environment Variables (Render)
@@ -67,9 +60,6 @@ GitHub Secrets:
 - `RENDER_DEPLOY_HOOK`: Render deploy hook URL triggered by deploy workflow.
 - `PLANETSCALE_DB_URL`: PlanetScale passwordless connection string.
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`: Optional REST credentials for queue management.
-- `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`: Cloudflare R2 storage credentials.
-- `SENTRY_LARAVEL_DSN`: Error reporting.
-- `GRAFANA_API_KEY`: API key for metrics/log shipping (optional).
 
 | Key | Source | Notes |
 | --- | --- | --- |
@@ -81,27 +71,19 @@ GitHub Secrets:
 | `REDIS_URL` | Upstash | TLS URI |
 | `REDIS_REST_URL` | Upstash | Optional for REST ingestion |
 | `QUEUE_CONNECTION` | static | `redis` |
-| `FILESYSTEM_DISK` | static | `r2` (custom disk config) |
-| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | Cloudflare R2 | Required for storage driver |
-| `SENTRY_LARAVEL_DSN` | Sentry | Error reporting |
-| `SENTRY_TRACES_SAMPLE_RATE` | config | Example `0.1` |
-| `GRAFANA_AGENT_ENDPOINT` | Grafana | Metrics/log shipping endpoint |
+| `FILESYSTEM_DISK` | config | Stream exports directly; leave unset or use `local` for temporary files |
 
 ## 6. Compliance Notes
-- Keep R2 bucket private; generate signed URLs per download.
+- Export jobs stream results directly to the requester; regenerate files when a historical copy is needed.
 - PlanetScale provides encryption at rest; confirm retention policies match UAE/KSA expectations.
-- Plan Laravel audit logging to forward events to R2 or Grafana for traceability.
+- Plan Laravel audit logging strategy after selecting a hosted monitoring service.
 
 ## 7. Weekly Checks
 - Review Render, PlanetScale, and Upstash dashboards for quota proximity.
 - Verify `Uptime Ping` workflow succeeded during the week (no failed runs).
-- Validate Sentry event volume below 5K/month threshold.
-- Confirm vault rotation reminders still valid.
 - Update `docs/accounts.md` if ownership changes.
 
 ## 8. Open Items
 - Implement Render deploy status polling and surfaced alerts.
-- Decide on additional uptime monitoring or alerting beyond GitHub Actions.
+- Decide on additional uptime monitoring or alerting beyond GitHub Actions (e.g., log aggregation later).
 - Evaluate future IaC/script automation (currently deferred).
-
-

@@ -10,17 +10,15 @@ Deliver a compliant, multi-tenant payroll tooling that ingests employee payroll 
 - **Backend:** PHP 8.3, Laravel 11, Filament 3 (admin UX), Laravel Tenancy/Stancl for tenant scoping, MySQL 8, Redis 7, Laravel Horizon, Pest/PHPUnit, PHPStan/Psalm, OpenAPI-powered controllers, Guzzle for external calls.
 - **Admin Experience:** Filament resource pages, Livewire v3, Tailwind CSS, Alpine.js, Chart.js for KPIs, Filament Shield for RBAC policy scaffolding.
 - **Localization & PWA:** Laravel Localization (Spatie package) for English/Arabic content, RTL-friendly Tailwind config, dynamic locale switcher, Laravel PWA (or Workbox/Vite plugin) for manifest, service workers, offline fallback, install prompts.
-- **Data & Storage:** Encrypted MySQL schemas (per-tenant scoping), AWS S3-compatible object store (or Cloudflare R2) for artifacts, Laravel Scout (optional) for advanced search.
+- **Data & Storage:** Encrypted MySQL schemas (per-tenant scoping) with on-demand export streaming (no persistent object store in MVP), Laravel Scout (optional) for advanced search.
 - **Async & Integrations:** Horizon-managed queues on Redis for validation/export jobs, REST adapters for bank and Mudad endpoints, Laravel Events feeding shared audit/event bus.
-- **DevOps & QA Tooling:** Docker Compose, GitHub Actions CI/CD, Terraform/IaC scripts, Prometheus + Grafana dashboards, Loki/Sentry for observability, Trivy/Snyk for security scans, Lighthouse CI for PWA/RTL regressions.
+- **DevOps & QA Tooling:** Docker Compose, GitHub Actions CI/CD, Terraform/IaC scripts, Prometheus + Loki for observability, Trivy/Snyk for security scans, Lighthouse CI for PWA/RTL regressions.
 
 ## Free Tier Deployment & Services
 - **Vercel (Hobby):** Host public marketing site, API documentation (Next.js) and status page; 100 GB bandwidth per month and 12 serverless function executions per minute limit - backend API remains on PHP runtime elsewhere.
-- **Render (Free Web Service):** Run Laravel app (one instance, 512 MB, 750 hours per month). Alternative: **Railway** free tier (up to `$5` credits) for burstable staging environments.
+- **Render (Free Web Service):** Run the Laravel app via Docker runtime (Render builds from the repository `Dockerfile`), one instance, 512 MB, 750 hours per month. Alternative: **Railway** free tier (up to `$5` credits) for burstable staging environments.
 - **PlanetScale (Free):** Serverless MySQL with branch-based workflows; supports 5 GB storage and 10 million row reads per day - ideal for staging/UAT, migrate to paid or managed MySQL for production.
 - **Upstash Redis (Free):** Serves queue workloads with 10,000 commands per day - suitable for dev/staging; upgrade for production throughput.
-- **Cloudflare R2 (Free tier):** 10 GB storage and 1 million requests per month for generated SIF/PDF artifacts.
-- **Sentry / Grafana Cloud (Free plans):** Application monitoring (5K events per month) and metrics collection (10,000 series) for early observability footprint.
 - **GitHub Actions (Free for org up to 2K minutes per month):** Automate tests, linting, container builds, deploy pipelines.
 
 ## Scope and Deliverables (MVP)
@@ -38,8 +36,9 @@ Deliver a compliant, multi-tenant payroll tooling that ingests employee payroll 
 - **Objectives:** Establish baseline environments, deployment guidelines, and compliance-ready foundations.
 - **Key Tasks:**
   - Execute GitHub Actions CI/CD pipeline setup (build/test/security/deploy) as first DevOps action; enforce branch protections.
-  - Register and secure free-tier accounts (Render/Railway, PlanetScale, Upstash, R2, Sentry, Grafana, Vercel) and document quotas.
+  - Register and secure free-tier accounts (Render/Railway, PlanetScale, Upstash, Vercel) and document quotas.
   - Define environment topology (Dev/Staging/Prod), networking, and secret management standards; publish deployment runbook v0.
+  - Finalize the Render Dockerfile and validate a production build locally or via GitHub Actions.
   - Provision Terraform/IaC skeleton for hosting, database, Redis, and storage resources.
   - Configure baseline Docker Compose stack; validate local parity with staging targets.
   - Draft localization/PWA acceptance criteria and gather bilingual content sources.
@@ -64,8 +63,7 @@ Deliver a compliant, multi-tenant payroll tooling that ingests employee payroll 
   - Create rule definition DSL (JSON/YAML) and execution service with Horizon workers.
   - Implement UAE WPS validators, stub KSA Mudad adapter with sandbox endpoints.
   - Develop SIF template library with versioned bank profiles (including Arabic labels where required) and export scheduling.
-  - Store generated files in R2/S3, expose download/audit endpoints with locale-aware metadata.
-  - Add monitoring dashboards (Grafana Cloud) for queue depth, processing latency, PWA performance metrics.
+  - Stream generated files directly to users, exposing download/audit endpoints with locale-aware metadata.
   - Enhance service worker for offline queues, background sync, and push notification hooks.
   - QA: expand regression suite for validation outcomes, SIF golden files, and Lighthouse CI thresholds.
 - **Exit Criteria:** Successful bilingual batch validation plus SIF export in staging, bank profiles versioned, queue metrics visible, PWA scores meeting targets.
@@ -86,7 +84,7 @@ Deliver a compliant, multi-tenant payroll tooling that ingests employee payroll 
 - **Localization, RTL & Experience:** translation file management, RTL component audits, responsive breakpoints, accessibility reviews, Lighthouse PWA/regression automation.
 - **Data Import & Quality:** file schema registry, anomaly detection (for example, missing salary fields), resumable imports, data purge policy.
 - **Validation & SIF Engine:** configuration UI for rule toggles, rule version history, bank profile testing harness, scheduled re-validation jobs.
-- **Exceptions & Reporting:** exception triage states (new/in review/resolved), SLA breach alerts, export reconciliation reports, Grafana dashboards.
+- **Exceptions & Reporting:** exception triage states (new/in review/resolved), SLA breach alerts, export reconciliation reports, operational dashboards (tooling TBD).
 - **Platform & DevOps:** GitHub Actions workflows (lint/test/deploy), IaC for database/redis buckets, incident response runbooks, SAST/DAST gating, observability dashboards.
 
 ## Team and Responsibilities
@@ -117,3 +115,4 @@ Deliver a compliant, multi-tenant payroll tooling that ingests employee payroll 
 1. Validate deployment topology and free-tier usage assumptions; refine Sprint 0 runbook with DevOps and InfoSec.
 2. Confirm bilingual content sources and RTL design requirements with stakeholders; collect sample Arabic payroll artifacts.
 3. Specify PWA acceptance criteria (offline scope, caching strategy, install prompts) and align with QA on automated checks.
+

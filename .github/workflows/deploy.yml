@@ -10,9 +10,6 @@ on:
         options:
           - staging
           - production
-      ci_run_id:
-        description: "GitHub Actions run ID from CI build"
-        required: true
       version:
         description: "Release tag or commit SHA"
         required: true
@@ -32,19 +29,6 @@ jobs:
         run: |
           echo "Deploying version: ${{ inputs.version }}"
           echo "Target environment: ${{ inputs.environment }}"
-          echo "CI run ID: ${{ inputs.ci_run_id }}"
-
-      - name: Download release artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: app-release
-          path: release
-          run-id: ${{ inputs.ci_run_id }}
-
-      - name: Verify artifact contents
-        run: |
-          ls -al release
-          tar -tzf release/app-release.tar.gz | head
 
       - name: Trigger Render deploy hook
         env:
@@ -55,9 +39,3 @@ jobs:
             exit 1
           fi
           curl --fail --silent --show-error -X POST "$RENDER_DEPLOY_HOOK"
-
-      - name: Attach artifact to workflow run (optional download)
-        uses: actions/upload-artifact@v4
-        with:
-          name: deployed-release
-          path: release/app-release.tar.gz
