@@ -4,6 +4,7 @@
 
 ## 1. Preparation
 - Gather the GitHub repository link (`https://github.com/ahmedmmkms/WPSPayrollComplianceRemote`) and ensure you have Maintainer access for Secrets configuration.
+- Copy `.env.example` to `.env` for local tooling; keep the populated file out of version control.
 - Keep `docs/accounts.md`, `docs/runbook.md`, and this playbook open; update owner tables and notes as you proceed.
 
 ## 2. Render (Laravel App Host)
@@ -67,7 +68,7 @@ Navigate to repo -> **Settings -> Secrets and variables -> Actions** and create 
 After adding secrets, trigger a dummy run of the `Deploy` workflow with sample `ci_run_id` to confirm the hook works (it should fail gracefully if artifact missing but must read secrets successfully).
 
 ## 8. Documentation Updates
-- Mark each service’s checklist in `docs/accounts.md` as completed.
+- Mark each service?s checklist in `docs/accounts.md` as completed.
 - Fill the owner registry with names, backup, rotation interval, last updated date.
 - Update `docs/runbook.md` if URLs or secrets change.
 - Note completion date and responsible engineer at the top of this playbook.
@@ -79,3 +80,10 @@ After adding secrets, trigger a dummy run of the `Deploy` workflow with sample `
 - Schedule quarterly review to reconfirm quotas, secrets, and account ownership.
 
 Document owner: _TBD_. Last updated: _TBD_.
+## 10. Infrastructure Assets
+- `Dockerfile`: Production container image for Render deployments (PHP 8.3 FPM with Nginx + Supervisor). Update environment variables before triggering new builds.
+- `docker-compose.yml`: Optional helper to build and run the Render container image locally using the environment variables defined in `.env` (generate from `.env.example`; no local MySQL/Redis).
+- `docker/`: Helper scripts and configuration (Nginx template, Supervisor config, entrypoint orchestration).
+- `infra/terraform/`: Terraform skeleton ready for Render, PlanetScale, Upstash, and GitHub secret automation. Populate provider credentials via environment variables or `secrets.auto.tfvars` (copy from `.example`) before apply.
+
+

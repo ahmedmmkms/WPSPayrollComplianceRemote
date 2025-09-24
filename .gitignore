@@ -15,3 +15,4 @@ Dockerfile*
 .php-cs-fixer.cache
 coverage/
 reports/
+infra/terraform/secrets.auto.tfvars

@@ -87,3 +87,9 @@ GitHub Secrets:
 - Implement Render deploy status polling and surfaced alerts.
 - Decide on additional uptime monitoring or alerting beyond GitHub Actions (e.g., log aggregation later).
 - Evaluate future IaC/script automation (currently deferred).
+## 9. Image Validation
+- Use `docker compose build app` to ensure the Render Dockerfile remains healthy.
+- `docker compose up app` will boot the container against the remote services configured in `.env`; stop after smoke-testing endpoints.
+- No local MySQL/Redis containers are bundled; managed services provisioned in Sprint 0 remain the single source.
+- Terraform scaffolding lives in `infra/terraform`; populate provider credentials and replace TODO sections as services become codified.
+
