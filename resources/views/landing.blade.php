@@ -37,6 +37,28 @@
             font-size: clamp(1.05rem, 2.8vw, 1.35rem);
             color: rgba(248, 250, 252, 0.85);
         }
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        a.button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.75rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.16);
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+        a.button:hover {
+            background: rgba(56, 189, 248, 0.24);
+        }
         .badge {
             display: inline-flex;
             align-items: center;
@@ -47,7 +69,6 @@
             color: #38bdf8;
             font-weight: 600;
             letter-spacing: 0.08em;
-            text-transform: uppercase;
         }
         .badge span {
             font-family: "JetBrains Mono", monospace;
@@ -65,6 +86,14 @@
             ? 'التطبيق قيد التطوير. تم تفعيل البيئة وتعمل على منصة Render بينما يُستكمل العمل على وظائف الدفعات، التعددية، واللغات.'
             : 'The application backend is under active development. The Render environment is online while we finish tenant, import, and localization features.' }}
     </p>
+    <div class="actions">
+        <a class="button" href="{{ route('login') }}">
+            {{ $locale === 'ar' ? 'تسجيل الدخول عبر Keycloak' : 'Login with Keycloak' }}
+        </a>
+        <a class="button" href="https://wpspayrollcomplianceremote.onrender.com/health" target="_blank" rel="noopener">
+            {{ $locale === 'ar' ? 'حالة البيئة' : 'Check Environment Status' }}
+        </a>
+    </div>
     <div class="badge">
         {{ $locale === 'ar' ? 'البيئة متصلة' : 'Environment Online' }}
         <span>{{ now('UTC')->format('Y-m-d H:i') }} UTC</span>

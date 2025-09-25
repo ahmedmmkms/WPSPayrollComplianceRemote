@@ -90,6 +90,7 @@ GitHub Secrets:
 ## 9. Open Items
 - Render service reachable at https://wpspayrollcomplianceremote.onrender.com (Docker runtime).
 - GitHub Actions secrets maintained manually in repository settings (Terraform removed).
+- Keycloak auth: store `KEYCLOAK_*` credentials in GitHub secrets and central vault.
 - Bilingual placeholder (`public/index.php`) returns 200; full Laravel app rollout tracked for Sprint 1.
 - Deploy workflow polls Render deployments; configure `RENDER_API_KEY` and `RENDER_SERVICE_ID` secrets.
 - Document PlanetScale/Upstash provisioning details and update docs/accounts.md after each rotation.

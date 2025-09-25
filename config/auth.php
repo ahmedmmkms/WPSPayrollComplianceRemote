@@ -35,7 +35,7 @@ return [
     |
     */
 
-    'guards' => [
+    'guards' => [\n        'keycloak' => [\n            'driver' => 'keycloak-web',\n            'provider' => 'users',\n        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'users',

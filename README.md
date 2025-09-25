@@ -9,6 +9,12 @@ This repository currently hosts infrastructure scaffolding and a Render-ready Do
 - ✅ Secrets loaded directly into GitHub repository settings (no Terraform).
 - ✅ Localization & PWA acceptance criteria defined in `docs/localization-pwa.md`.
 
+## Local Development
+1. Copy `.env.example` to `.env` and fill in Render/Keycloak/PlanetScale values.
+2. Install dependencies (`composer install`, `npm install`).
+3. Run `npm run build` to compile assets; optional `php artisan serve` for local testing.
+4. Database provisioning is managed by tenancy; use `php artisan tenants:create` (to be scripted).
+
 ## Outstanding Work (Sprint 1+)
 - Implement actual Laravel multi-tenant application: migrations, tenancy, Filament admin, etc.
 - Replace placeholder landing page with real app shell; wire `/health` endpoint.

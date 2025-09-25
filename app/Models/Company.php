@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Company extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'tenant_id',
+        'name',
+        'trade_license',
+        'contact_email',
+        'metadata',
+    ];
+
+    protected $casts = [
+        'metadata' => 'array',
+    ];
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class);
+    }
+
+    public function payrollBatches(): HasMany
+    {
+        return $this->hasMany(PayrollBatch::class);
+    }
+}
