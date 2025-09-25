@@ -93,4 +93,4 @@ Document owner: AMM. Last updated: 2025-09-25.
 - [done] GitHub Actions secrets populated manually via GitHub Settings (Terraform removed).
 - [done] Render service deployed successfully using Docker runtime (`https://wpspayrollcomplianceremote.onrender.com`).
 - [done] Bilingual placeholder (`public/index.php`) deployed so Render health checks succeed until Laravel app ships.
-- [todo] Add Render deploy status polling and basic alerting (see docs/runbook.md open items).
+- [done] Deploy workflow polls Render API; secrets required: `RENDER_API_KEY`, `RENDER_SERVICE_ID`.
