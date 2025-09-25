@@ -4,9 +4,8 @@ set -e
 APP_PORT=${PORT:-8080}
 export APP_PORT
 
-if [ -f /etc/nginx/templates/default.conf ]; then
-    mkdir -p /etc/nginx/conf.d
-    envsubst '${APP_PORT}' < /etc/nginx/templates/default.conf > /etc/nginx/conf.d/default.conf
+if [ -f /etc/nginx/templates/nginx.conf.template ]; then
+    envsubst '${APP_PORT}' < /etc/nginx/templates/nginx.conf.template > /etc/nginx/nginx.conf
 fi
 
 # Ensure storage directories are writable when the framework is present

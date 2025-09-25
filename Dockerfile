@@ -40,7 +40,7 @@ WORKDIR /var/www/html
 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY docker/nginx.default.conf /etc/nginx/templates/default.conf
+COPY docker/nginx.conf.template /etc/nginx/templates/nginx.conf.template
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 COPY . .
