@@ -84,6 +84,12 @@ GitHub Secrets:
 - Update `docs/accounts.md` if ownership changes.
 
 ## 8. Open Items
+## 8. Open Items
+- Render service reachable at https://wpspayrollcomplianceremote.onrender.com (Docker runtime).
+- GitHub Actions secrets managed through Terraform `github-secrets` module.
+- Application code pending; current container returns placeholder 404 response.
+- Terraform render-service module still TODO?capture service IDs and finalize IaC before go-live.
+- Plan database/Redis provisioning steps once PlanetScale/Upstash resources are codified.
 - Implement Render deploy status polling and surfaced alerts.
 - Decide on additional uptime monitoring or alerting beyond GitHub Actions (e.g., log aggregation later).
 - Evaluate future IaC/script automation (currently deferred).
