@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Stancl\Tenancy\Bootstrappers\CacheBootstrapper;
 use Stancl\Tenancy\Bootstrappers\QueueBootstrapper;
 use Stancl\Tenancy\Bootstrappers\StorageBootstrapper;
-use Stancl\Tenancy\Middleware;
 use Stancl\Tenancy\Tenancy;
 
 class TenancyServiceProvider extends ServiceProvider
@@ -24,11 +23,6 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Tenancy::routes()
-            ->middleware([
-                Middleware\InitializeTenancyByDomain::class,
-                Middleware\PreventAccessFromCentralDomains::class,
-            ])
-            ->group(base_path('routes/tenant.php'));
+        // TODO: Map tenant routes when tenancy routing is finalized.
     }
 }

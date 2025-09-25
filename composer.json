@@ -9,12 +9,13 @@
   ],
   "license": "MIT",
   "require": {
-    "laravel/framework": "^12.0",
-    "stancl/tenancy": "^4.16",
     "spatie/laravel-permission": "^6.0",
+    "php": "^8.2",
     "laravel/tinker": "^2.10.1",
     "vizir/laravel-keycloak-web-guard": "^4.0",
-    "php": "^8.2"
+    "filament/filament": "^3.2",
+    "stancl/tenancy": "^3.8",
+    "laravel/framework": "^12.0"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",
