@@ -81,21 +81,24 @@ GitHub Secrets:
 ## 7. Weekly Checks
 - Review Render, PlanetScale, and Upstash dashboards for quota proximity.
 - Verify `Uptime Ping` workflow succeeded during the week (no failed runs).
-- Update `docs/accounts.md` if ownership changes.
+- Update `docs/accounts.md` if ownership or secrets change.
 
-## 8. Open Items
-## 8. Open Items
+## 8. Localization & PWA Sign-off
+- Follow `docs/localization-pwa.md` for bilingual acceptance criteria; QA documents sign-off each release.
+- Archive Arabic copy approvals in docs/quotas.md and sync translation keys when content evolves.
+
+## 9. Open Items
 - Render service reachable at https://wpspayrollcomplianceremote.onrender.com (Docker runtime).
 - GitHub Actions secrets maintained manually in repository settings (Terraform removed).
-- Application code pending; current container returns placeholder 404 response.
-- Track Render configuration changes directly in this runbook until an alternative IaC approach is approved.
+- Placeholder landing page (`public/index.php`) returns 200; full Laravel app delivery scheduled for Sprint 1.
+- Track Render configuration changes directly in this runbook until alternative automation is adopted.
 - Document PlanetScale/Upstash provisioning details and update docs/accounts.md after each rotation.
 - Implement Render deploy status polling and surfaced alerts.
 - Decide on additional uptime monitoring or alerting beyond GitHub Actions (e.g., log aggregation later).
 - Evaluate future IaC/script automation (currently deferred).
-## 9. Image Validation
+
+## 10. Image Validation
 - Use `docker compose build app` to ensure the Render Dockerfile remains healthy.
 - `docker compose up app` will boot the container against the remote services configured in `.env`; stop after smoke-testing endpoints.
 - No local MySQL/Redis containers are bundled; managed services provisioned in Sprint 0 remain the single source.
-- Secrets maintained directly in GitHub repository settings; ensure updates are documented in docs/accounts.md.
-
+- Secrets maintained directly in GitHub repository settings; document rotations in docs/accounts.md.

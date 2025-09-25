@@ -88,8 +88,9 @@ Document owner: AMM. Last updated: 2025-09-25.
 
 
 ## 11. Deployment Status (2025-09-25)
+- [done] Localization & PWA acceptance criteria captured in `docs/localization-pwa.md` (QA owner).
 - [done] Accounts created for Render, PlanetScale/Neon, Upstash, Vercel; credentials tracked in docs/accounts.md.
 - [done] GitHub Actions secrets populated manually via GitHub Settings (Terraform removed).
 - [done] Render service deployed successfully using Docker runtime (`https://wpspayrollcomplianceremote.onrender.com`).
-- [todo] Repo currently hosts infrastructure scaffolding only (no Laravel app); deployed container serves 404 placeholder.
-- [todo] Infrastructure automation deferred; track Render/PlanetScale/Upstash changes in runbook until replacement tooling is chosen.
+- [done] Stub landing page deployed (see `public/index.php`) so Render health checks succeed; full Laravel build tracked for Sprint 1.
+- [note] Infrastructure automation deferred; update Render/PlanetScale/Upstash changes in docs/runbook.md until replacement tooling is chosen.
