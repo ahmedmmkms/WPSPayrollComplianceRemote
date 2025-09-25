@@ -88,6 +88,7 @@ GitHub Secrets:
 - Archive Arabic copy approvals in docs/quotas.md and sync translation keys when content evolves.
 
 ## 9. Open Items
+- Use `php artisan tenants:create` to provision new customer tenants (requires KEYCLOAK_* secrets).
 - Render service reachable at https://wpspayrollcomplianceremote.onrender.com (Docker runtime).
 - GitHub Actions secrets maintained manually in repository settings (Terraform removed).
 - Keycloak auth: store `KEYCLOAK_*` credentials in GitHub secrets and central vault.

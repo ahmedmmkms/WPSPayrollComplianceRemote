@@ -85,6 +85,7 @@ Document owner: AMM. Last updated: 2025-09-25.
 - `docker-compose.yml`: Optional helper to build and run the Render container image locally using the environment variables defined in `.env` (generate from `.env.example`; no local MySQL/Redis).
 - `docker/`: Helper scripts and configuration (Nginx template, Supervisor config, entrypoint orchestration).
 - Keycloak integration requires `KEYCLOAK_*` secrets (base URL, realm, client) in `.env` and GitHub settings.
+- Create tenants via `php artisan tenants:create --name=Acme --domain=acme.example.com --email=ops@acme.com`.
 - GitHub repository settings now hold all deployment secrets; update the account registry when values rotate.
 
 

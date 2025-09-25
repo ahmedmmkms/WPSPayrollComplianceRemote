@@ -14,6 +14,8 @@ This repository currently hosts infrastructure scaffolding and a Render-ready Do
 2. Install dependencies (`composer install`, `npm install`).
 3. Run `npm run build` to compile assets; optional `php artisan serve` for local testing.
 4. Database provisioning is managed by tenancy; use `php artisan tenants:create` (to be scripted).
+5. Create a tenant when ready: `php artisan tenants:create --name="Acme" --domain="acme.local" --email="ops@acme.test"`.
+
 
 ## Outstanding Work (Sprint 1+)
 - Implement actual Laravel multi-tenant application: migrations, tenancy, Filament admin, etc.
