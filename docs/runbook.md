@@ -90,7 +90,7 @@ GitHub Secrets:
 ## 9. Open Items
 - Render service reachable at https://wpspayrollcomplianceremote.onrender.com (Docker runtime).
 - GitHub Actions secrets maintained manually in repository settings (Terraform removed).
-- Placeholder landing page (`public/index.php`) returns 200; full Laravel app delivery scheduled for Sprint 1.
+- Bilingual placeholder (`public/index.php`) returns 200; full Laravel app rollout tracked for Sprint 1.
 - Track Render configuration changes directly in this runbook until alternative automation is adopted.
 - Document PlanetScale/Upstash provisioning details and update docs/accounts.md after each rotation.
 - Implement Render deploy status polling and surfaced alerts.
