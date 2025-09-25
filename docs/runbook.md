@@ -86,10 +86,10 @@ GitHub Secrets:
 ## 8. Open Items
 ## 8. Open Items
 - Render service reachable at https://wpspayrollcomplianceremote.onrender.com (Docker runtime).
-- GitHub Actions secrets managed through Terraform `github-secrets` module.
+- GitHub Actions secrets maintained manually in repository settings (Terraform removed).
 - Application code pending; current container returns placeholder 404 response.
-- Terraform render-service module still TODO?capture service IDs and finalize IaC before go-live.
-- Plan database/Redis provisioning steps once PlanetScale/Upstash resources are codified.
+- Track Render configuration changes directly in this runbook until an alternative IaC approach is approved.
+- Document PlanetScale/Upstash provisioning details and update docs/accounts.md after each rotation.
 - Implement Render deploy status polling and surfaced alerts.
 - Decide on additional uptime monitoring or alerting beyond GitHub Actions (e.g., log aggregation later).
 - Evaluate future IaC/script automation (currently deferred).
@@ -97,5 +97,5 @@ GitHub Secrets:
 - Use `docker compose build app` to ensure the Render Dockerfile remains healthy.
 - `docker compose up app` will boot the container against the remote services configured in `.env`; stop after smoke-testing endpoints.
 - No local MySQL/Redis containers are bundled; managed services provisioned in Sprint 0 remain the single source.
-- Terraform scaffolding lives in `infra/terraform`; populate provider credentials and replace TODO sections as services become codified.
+- Secrets maintained directly in GitHub repository settings; ensure updates are documented in docs/accounts.md.
 

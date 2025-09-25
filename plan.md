@@ -12,7 +12,7 @@ Deliver a compliant, multi-tenant payroll tooling that ingests employee payroll 
 - **Localization & PWA:** Laravel Localization (Spatie package) for English/Arabic content, RTL-friendly Tailwind config, dynamic locale switcher, Laravel PWA (or Workbox/Vite plugin) for manifest, service workers, offline fallback, install prompts.
 - **Data & Storage:** Encrypted MySQL schemas (per-tenant scoping) with on-demand export streaming (no persistent object store in MVP), Laravel Scout (optional) for advanced search.
 - **Async & Integrations:** Horizon-managed queues on Redis for validation/export jobs, REST adapters for bank and Mudad endpoints, Laravel Events feeding shared audit/event bus.
-- **DevOps & QA Tooling:** Docker Compose, GitHub Actions CI/CD, Terraform/IaC scripts, Prometheus + Loki for observability, Trivy/Snyk for security scans, Lighthouse CI for PWA/RTL regressions.
+- **DevOps & QA Tooling:** Docker Compose, GitHub Actions CI/CD, Prometheus + Loki for observability, Trivy/Snyk for security scans, Lighthouse CI for PWA/RTL regressions.
 
 ## Free Tier Deployment & Services
 - **Vercel (Hobby):** Host public marketing site, API documentation (Next.js) and status page; 100 GB bandwidth per month and 12 serverless function executions per minute limit - backend API remains on PHP runtime elsewhere.
@@ -39,7 +39,7 @@ Deliver a compliant, multi-tenant payroll tooling that ingests employee payroll 
   - Register and secure free-tier accounts (Render/Railway, PlanetScale, Upstash, Vercel) and document quotas.
   - Define environment topology (Dev/Staging/Prod), networking, and secret management standards; publish deployment runbook v0.
   - Finalize the Render Dockerfile and validate a production build locally or via GitHub Actions.
-  - Provision Terraform/IaC skeleton for hosting, database, Redis, and storage resources.
+  - Document hosting/database/Redis provisioning steps and secret management runbooks.
   - Configure baseline Docker Compose stack; validate local parity with staging targets.
   - Draft localization/PWA acceptance criteria and gather bilingual content sources.
 - **Exit Criteria:** Deployment playbook approved, pipelines green, baseline environments reachable, localization/PWA requirements captured.

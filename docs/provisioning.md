@@ -84,12 +84,12 @@ Document owner: AMM. Last updated: 2025-09-25.
 - `Dockerfile`: Production container image for Render deployments (PHP 8.3 FPM with Nginx + Supervisor). Update environment variables before triggering new builds.
 - `docker-compose.yml`: Optional helper to build and run the Render container image locally using the environment variables defined in `.env` (generate from `.env.example`; no local MySQL/Redis).
 - `docker/`: Helper scripts and configuration (Nginx template, Supervisor config, entrypoint orchestration).
-- `infra/terraform/`: Terraform skeleton ready for Render, PlanetScale, Upstash, and GitHub secret automation. Populate provider credentials via environment variables or `secrets.auto.tfvars` (copy from `.example`) before apply.
+- GitHub repository settings now hold all deployment secrets; update the account registry when values rotate.
 
 
 ## 11. Deployment Status (2025-09-25)
-- ✅ Accounts created for Render, PlanetScale/Neon, Upstash, Vercel; credentials tracked in docs/accounts.md.
-- ✅ GitHub Actions secrets populated via Terraform module (`infra/terraform/modules/github-secrets`).
-- ✅ Render service deployed successfully using Docker runtime (`https://wpspayrollcomplianceremote.onrender.com`).
-- ⚠️ Repo currently hosts infrastructure scaffolding only (no Laravel app); deployed container serves 404 placeholder.
-- ⚠️ IaC modules for Render service, database, and Redis remain TODO stubs—environments not yet fully codified.
+- [done] Accounts created for Render, PlanetScale/Neon, Upstash, Vercel; credentials tracked in docs/accounts.md.
+- [done] GitHub Actions secrets populated manually via GitHub Settings (Terraform removed).
+- [done] Render service deployed successfully using Docker runtime (`https://wpspayrollcomplianceremote.onrender.com`).
+- [todo] Repo currently hosts infrastructure scaffolding only (no Laravel app); deployed container serves 404 placeholder.
+- [todo] Infrastructure automation deferred; track Render/PlanetScale/Upstash changes in runbook until replacement tooling is chosen.
