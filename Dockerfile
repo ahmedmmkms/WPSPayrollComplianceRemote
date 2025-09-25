@@ -22,6 +22,7 @@ RUN apk add --no-cache \
         oniguruma-dev \
         libxml2-dev \
         libpq-dev \
+        postgresql-dev \
         gettext \
         shadow
 
@@ -31,6 +32,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
         intl \
         pcntl \
         pdo_mysql \
+        pdo_pgsql \
+        zip \
         opcache \
         gd
 
