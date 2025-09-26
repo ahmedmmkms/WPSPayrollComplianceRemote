@@ -41,12 +41,16 @@ COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/nginx.conf.template /etc/nginx/templates/nginx.conf.template
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 COPY . .
+
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
 
 RUN chown -R www-data:www-data /var/www/html
 
@@ -71,5 +75,6 @@ EXPOSE 8080
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
 
 
